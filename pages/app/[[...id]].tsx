@@ -9,8 +9,16 @@ import User from '../../components/user';
 import FolderPane from '../../components/folderPane';
 import DocPane from '../../components/docPane';
 import NewFolderDialog from '../../components/newFolderDialog';
+import { connectToDB, doc, folder } from '../../db';
 
-const App: FC<{ folders?: any[]; activeFolder?: any; activeDoc?: any; activeDocs?: any[] }> = ({
+interface AppProps {
+  folders?: any[];
+  activeFolder?: any;
+  activeDoc?: any;
+  activeDocs?: any[];
+}
+
+const App: FC<AppProps> = ({
   folders,
   activeDoc,
   activeFolder,
@@ -77,8 +85,29 @@ App.defaultProps = {
 
 export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
+  if (!session) {
+    return {
+      props: {
+        session,
+      },
+    };
+  }
 
-  return { props: { session } };
+  const { db } = await connectToDB();
+  const folders = await folder.getFolders(db, session.user.id);
+
+  const props: AppProps = {};
+
+  if (ctx.params.id) {
+    props.activeFolder = folders.find((f) => f._id === ctx.params.id[0]);
+    props.activeDocs = await doc.getDocsByFolder(db, props.activeFolder._id);
+
+    if (ctx.params.id.length > 1) {
+      props.activeDoc = await doc.getOneDoc(db, ctx.params.id[1]);
+    }
+  }
+
+  return { props };
 }
 
 /**
