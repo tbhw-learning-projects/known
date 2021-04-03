@@ -28,6 +28,20 @@ const App: FC<AppProps> = ({
   const router = useRouter();
   const [session, loading] = useSession();
   const [newFolderIsShown, setIsShown] = useState(false);
+  const [allFolders, setAllFolders] = useState(folders);
+
+  async function handleNewFolder(name: string) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/folder`, {
+      method: 'POST',
+      body: JSON.stringify({ name }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const { data } = await res.json();
+    setAllFolders((f) => [...f, data]);
+  }
 
   if (loading) return null;
 
@@ -68,13 +82,13 @@ const App: FC<AppProps> = ({
 
           <NewFolderButton onClick={() => setIsShown(true)} />
         </Pane>
-        <Pane>{folders.length === 0 ? null : <FolderList folders={folders} />} </Pane>
+        <Pane>{folders.length === 0 ? null : <FolderList folders={allFolders} />}</Pane>
       </Pane>
       <Pane marginLeft={300} width="calc(100vw - 300px)" height="100vh" overflowY="auto" position="relative">
         <User user={session.user} />
         <Page />
       </Pane>
-      <NewFolderDialog close={() => setIsShown(false)} isShown={newFolderIsShown} onNewFolder={() => {}} />
+      <NewFolderDialog close={() => setIsShown(false)} isShown={newFolderIsShown} onNewFolder={handleNewFolder} />
     </Pane>
   );
 };
@@ -83,31 +97,36 @@ App.defaultProps = {
   folders: [],
 };
 
-export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx);
-  if (!session) {
-    return {
-      props: {
-        session,
-      },
-    };
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  // not signed in
+  if (!session || !session.user) {
+    return { props: {} };
   }
 
+  const props: any = { session };
   const { db } = await connectToDB();
   const folders = await folder.getFolders(db, session.user.id);
+  props.folders = folders;
 
-  const props: AppProps = {};
+  if (context.params.id) {
+    const activeFolder = folders.find((f) => f._id === context.params.id[0]);
+    const activeDocs = await doc.getDocsByFolder(db, activeFolder._id);
+    props.activeFolder = activeFolder;
+    props.activeDocs = activeDocs;
 
-  if (ctx.params.id) {
-    props.activeFolder = folders.find((f) => f._id === ctx.params.id[0]);
-    props.activeDocs = await doc.getDocsByFolder(db, props.activeFolder._id);
+    const activeDocId = context.params.id[1];
 
-    if (ctx.params.id.length > 1) {
-      props.activeDoc = await doc.getOneDoc(db, ctx.params.id[1]);
+    if (activeDocId) {
+      props.activeDoc = await doc.getOneDoc(db, activeDocId);
     }
   }
 
-  return { props };
+  console.log(props);
+
+  return {
+    props,
+  };
 }
 
 /**
