@@ -11,6 +11,7 @@ import DocPane from '../../components/docPane';
 import NewFolderDialog from '../../components/newFolderDialog';
 import { connectToDB, doc, folder } from '../../db';
 import { GetServerSideProps } from 'next';
+import { UserSession } from '../../types';
 
 interface AppProps {
   folders?: any[];
@@ -86,7 +87,7 @@ const App: FC<AppProps> = ({
         <Pane>{folders.length === 0 ? null : <FolderList folders={allFolders} />}</Pane>
       </Pane>
       <Pane marginLeft={300} width="calc(100vw - 300px)" height="100vh" overflowY="auto" position="relative">
-        <User user={session.user} />
+        <User user={(session.user as unknown) as UserSession} />
         <Page />
       </Pane>
       <NewFolderDialog close={() => setIsShown(false)} isShown={newFolderIsShown} onNewFolder={handleNewFolder} />
@@ -107,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const props: any = { session };
   const { db } = await connectToDB();
-  const folders = await folder.getFolders(db, session.user.id);
+  const folders = await folder.getFolders(db, session.user.id as string);
   props.folders = folders;
 
   if (context.params.id) {
