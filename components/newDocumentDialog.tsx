@@ -3,7 +3,7 @@ import { Dialog, TextInput } from 'evergreen-ui';
 
 interface NewDocDialogProps {
   onNewDoc: (name: string) => Promise<void>;
-  close: (name: string) => void;
+  close: () => void;
   [prop: string]: React.ReactNode;
 }
 
