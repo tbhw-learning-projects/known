@@ -1,14 +1,16 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Pane, Heading, Paragraph, majorScale } from 'evergreen-ui';
 import Image from 'next/image';
 import Container from './container';
 
-const FeatureSection: FC<{ invert?: boolean; title: string; body: string; image: string }> = ({
-  title,
-  body,
-  image,
-  invert,
-}) => {
+interface FeatureSectionProps {
+  invert?: boolean;
+  title: string;
+  body: string;
+  image: string;
+}
+
+const FeatureSection: React.ReactNode = ({ title, body, image, invert }: FeatureSectionProps) => {
   const Left = () => (
     <Pane>
       <Heading size={900}>{title}</Heading>
