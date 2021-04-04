@@ -46,7 +46,7 @@ const Signin = (): JSX.Element => {
         justifyContent="center"
         paddingX={majorScale(7)}
       >
-        {loading && (
+        {(session || loading) && (
           <Pane width="100%" height="100%">
             <Spinner size={48} />
           </Pane>
@@ -56,7 +56,7 @@ const Signin = (): JSX.Element => {
             <SocialButton
               type="github"
               onClick={() => {
-                signIn('github');
+                signIn('github', { callbackUrl: `${process.env.NEXT_PUBLIC_API_HOST}/app` });
               }}
             />
           </Pane>

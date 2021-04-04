@@ -1,8 +1,13 @@
-import NextAuth from 'next-auth';
+import { NextApiRequest, NextApiResponse } from 'next';
+import NextAuth, { Session, User } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import Providers from 'next-auth/providers';
+// eslint-disable-next-line import/no-unresolved
+import { WithAdditionalParams } from 'next-auth/_utils';
 import { connectToDB, folder, doc } from '../../../db';
+import { UserSession } from '../../../types';
 
-export default (req: Request, res: Response): void =>
+export default (req: NextApiRequest, res: NextApiResponse): Promise<void> | void =>
   NextAuth(req, res, {
     session: {
       jwt: true,
@@ -28,11 +33,13 @@ export default (req: Request, res: Response): void =>
       async redirect(url: string, baseUrl: string): Promise<string> {
         return url.startsWith(baseUrl) ? url : baseUrl;
       },
-      async session(session, user) {
-        session.user.id = user.id;
-        return session;
+      async session(session: Session, user: User | JWT) {
+        if (isJwt(user)) {
+          session.user.id = user.id;
+        }
+        return session as WithAdditionalParams<Session>;
       },
-      async jwt(tokenPayload, user, account, profile, isNewUser) {
+      async jwt(tokenPayload, user: UserSession, account, profile, isNewUser) {
         const { db } = await connectToDB();
 
         if (isNewUser) {
@@ -65,3 +72,7 @@ export default (req: Request, res: Response): void =>
       },
     },
   });
+
+function isJwt(user: User | JWT): user is JWT {
+  return user.hasOwnProperty('id');
+}
