@@ -10,7 +10,7 @@ interface FeatureSectionProps {
   image: string;
 }
 
-const FeatureSection: React.ReactNode = ({ title, body, image, invert }: FeatureSectionProps) => {
+const FeatureSection = ({ title, body, image, invert }: FeatureSectionProps): JSX.Element => {
   const Left = () => (
     <Pane>
       <Heading size={900}>{title}</Heading>
