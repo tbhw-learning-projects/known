@@ -25,6 +25,9 @@ export default (req: Request, res: Response): void =>
       signIn: '/signin',
     },
     callbacks: {
+      async redirect(url: string, baseUrl: string): Promise<string> {
+        return url.startsWith(baseUrl) ? url : baseUrl;
+      },
       async session(session, user) {
         session.user.id = user.id;
         return session;
