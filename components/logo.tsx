@@ -1,8 +1,12 @@
-import React from 'react'
-import Link from 'next/link'
-import { Text } from 'evergreen-ui'
+import React from 'react';
+import Link from 'next/link';
+import { Text } from 'evergreen-ui';
 
-const Logo = ({ ...styles }) => {
+interface LogoProps {
+  [style: string]: string;
+}
+
+const Logo = ({ ...styles }: LogoProps): JSX.Element => {
   return (
     <Link href="/">
       <a>
@@ -11,7 +15,7 @@ const Logo = ({ ...styles }) => {
         </Text>
       </a>
     </Link>
-  )
-}
+  );
+};
 
-export default Logo
+export default Logo;

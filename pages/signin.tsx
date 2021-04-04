@@ -5,7 +5,7 @@ import { signIn, useSession } from 'next-auth/client';
 import SocialButton from '../components/socialButton';
 import { useRouter } from 'next/router';
 
-const Signin = () => {
+const Signin = (): JSX.Element => {
   const [session, loading] = useSession();
   const router = useRouter();
 

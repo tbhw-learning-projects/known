@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import hydrate from 'next-mdx-remote/hydrate';
 import { majorScale, Pane, Heading, Spinner } from 'evergreen-ui';
 import Head from 'next/head';
@@ -11,8 +11,9 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { posts } from '../../content';
 import renderToString from 'next-mdx-remote/render-to-string';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
-const BlogPost: FC<Post> = ({ source, frontMatter }) => {
+const BlogPost: NextPage<Post> = ({ source, frontMatter }) => {
   const content = hydrate(source);
   const router = useRouter();
 
@@ -55,15 +56,15 @@ BlogPost.defaultProps = {
  * Posts can come from the fs or our CMS
  */
 
-export function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const postPath = path.resolve(process.cwd(), 'posts');
   const postFiles = fs.readdirSync(postPath);
   const slugs = postFiles.map((name) => matter(fs.readFileSync(path.resolve(postPath, name), 'utf-8')).data);
 
   return { paths: slugs.map(({ slug }) => ({ params: { slug } })), fallback: true };
-}
+};
 
-export async function getStaticProps({ params: { slug }, preview }) {
+export const getStaticProps: GetStaticProps = async ({ params: { slug }, preview }) => {
   let post;
   try {
     const postPath = path.resolve(process.cwd(), 'posts', `${slug}.mdx`);
@@ -79,6 +80,6 @@ export async function getStaticProps({ params: { slug }, preview }) {
   const mdxSource = await renderToString(post, { scope: data });
 
   return { props: { source: mdxSource, frontMatter: data } };
-}
+};
 
 export default BlogPost;

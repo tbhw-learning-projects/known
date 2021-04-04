@@ -1,5 +1,5 @@
-import React, { FC } from 'react'
-import { Pane, Heading, Paragraph, majorScale } from 'evergreen-ui'
+import React, { FC } from 'react';
+import { Pane, Heading, Paragraph, majorScale } from 'evergreen-ui';
 
 const Hero: FC<{ content: { title: string; body: string } }> = ({ content }) => {
   return (
@@ -19,7 +19,7 @@ const Hero: FC<{ content: { title: string; body: string } }> = ({ content }) => 
         </Paragraph>
       </Pane>
     </Pane>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;
