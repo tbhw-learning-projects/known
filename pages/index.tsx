@@ -1,12 +1,17 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Pane, majorScale } from 'evergreen-ui';
 import Container from '../components/container';
 import Hero from '../components/hero';
 import HomeNav from '../components/homeNav';
 import FeatureSection from '../components/featureSection';
 import { home } from '../content';
+import { GetStaticProps, NextPage } from 'next';
 
-const Home: FC<{ content: { hero: any; features: any[] } }> = ({ content }) => {
+interface HomeProps {
+  content: { hero: any; features: any[] };
+}
+
+const Home: NextPage<HomeProps> = ({ content }) => {
   return (
     <Pane>
       <header>
@@ -46,8 +51,8 @@ Home.defaultProps = {
   },
 };
 
-export function getStaticProps(ctx) {
+export const getStaticProps: GetStaticProps<HomeProps> = async (ctx) => {
   return { props: { content: ctx.preview ? home.draft : home.published } };
-}
+};
 
 export default Home;

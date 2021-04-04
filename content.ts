@@ -24,7 +24,7 @@ export const home = {
       { title: 'Beautiful design', body: 'Award wining design that you will fall in love with.' },
     ],
   },
-}
+};
 
 export const posts = {
   draft: [
@@ -62,4 +62,4 @@ publsihedOn: '3-20-2020'
 ---
 ## Elon musk writes`,
   ],
-}
+};

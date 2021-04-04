@@ -3,7 +3,6 @@ import middlewares from '../../../middleware/all';
 import { error } from '../../../middleware';
 import { doc } from '../../../db';
 import { Request } from '../../../types';
-import { request } from 'http';
 
 const handler = nc({
   onError: error,

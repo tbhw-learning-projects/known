@@ -1,3 +1,5 @@
-**/node_modules/**
+/node_modules
 lib
 build
+next.config.js
+.eslintrc.js

@@ -10,6 +10,7 @@ import FolderPane from '../../components/folderPane';
 import DocPane from '../../components/docPane';
 import NewFolderDialog from '../../components/newFolderDialog';
 import { connectToDB, doc, folder } from '../../db';
+import { GetServerSideProps } from 'next';
 
 interface AppProps {
   folders?: any[];
@@ -97,7 +98,7 @@ App.defaultProps = {
   folders: [],
 };
 
-export async function getServerSideProps(context) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   // not signed in
   if (!session || !session.user) {
@@ -127,7 +128,7 @@ export async function getServerSideProps(context) {
   return {
     props,
   };
-}
+};
 
 /**
  * Catch all handler. Must handle all different page

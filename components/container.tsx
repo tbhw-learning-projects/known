@@ -1,10 +1,14 @@
-import React from 'react'
-import { Pane } from 'evergreen-ui'
+import React, { PropsWithChildren } from 'react';
+import { Pane } from 'evergreen-ui';
 
-const Container = ({ children, ...styles }) => (
+interface ContainerProps {
+  [style: string]: string | React.ReactNode;
+}
+
+const Container = ({ children, ...styles }: PropsWithChildren<ContainerProps>): JSX.Element => (
   <Pane maxWidth="960px" marginX="auto" width="100%" {...styles}>
     {children}
   </Pane>
-)
+);
 
-export default Container
+export default Container;

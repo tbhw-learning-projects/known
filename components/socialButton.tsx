@@ -1,10 +1,10 @@
-import React from 'react'
-import { Pane, Card } from 'evergreen-ui'
-import GithubIcon from './githubIcon'
+import React, { MouseEventHandler } from 'react';
+import { Pane, Card } from 'evergreen-ui';
+import GithubIcon from './githubIcon';
 
-const icons = { github: GithubIcon }
-const SocialButton = ({ type, onClick }) => {
-  const Icon = icons[type] || GithubIcon
+const icons = { github: GithubIcon, Google: '' };
+const SocialButton = ({ type, onClick }: { type: keyof typeof icons; onClick: MouseEventHandler }): JSX.Element => {
+  const Icon = icons[type] || GithubIcon;
 
   return (
     <Card
@@ -29,7 +29,7 @@ const SocialButton = ({ type, onClick }) => {
         </span>
       </Pane>
     </Card>
-  )
-}
+  );
+};
 
-export default SocialButton
+export default SocialButton;

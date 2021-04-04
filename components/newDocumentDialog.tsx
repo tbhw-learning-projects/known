@@ -1,17 +1,23 @@
-import React, { useState } from 'react'
-import { Dialog, TextInput } from 'evergreen-ui'
+import React, { useState } from 'react';
+import { Dialog, TextInput } from 'evergreen-ui';
 
-const NewDocDialog = ({ onNewDoc, close, ...props }) => {
-  const [name, setName] = useState('')
-  const [saving, setSaving] = useState(false)
+interface NewDocDialogProps {
+  onNewDoc: (name: string) => Promise<void>;
+  close: () => void;
+  [prop: string]: React.ReactNode;
+}
+
+const NewDocDialog = ({ onNewDoc, close, ...props }: NewDocDialogProps): JSX.Element => {
+  const [name, setName] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const handleNewDocument = async () => {
-    setSaving(true)
-    await onNewDoc(name)
-    setSaving(false)
-    setName('')
-    close()
-  }
+    setSaving(true);
+    await onNewDoc(name);
+    setSaving(false);
+    setName('');
+    close();
+  };
 
   return (
     <Dialog
@@ -26,7 +32,7 @@ const NewDocDialog = ({ onNewDoc, close, ...props }) => {
     >
       <TextInput value={name} onChange={(e) => setName(e.target.value)} placeholder="doc name" />
     </Dialog>
-  )
-}
+  );
+};
 
-export default NewDocDialog
+export default NewDocDialog;

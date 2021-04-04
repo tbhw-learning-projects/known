@@ -1,8 +1,8 @@
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
-import { connectToDB, folder, doc } from '../../../db'
+import NextAuth from 'next-auth';
+import Providers from 'next-auth/providers';
+import { connectToDB, folder, doc } from '../../../db';
 
-export default (req, res) =>
+export default (req: Request, res: Response): void =>
   NextAuth(req, res, {
     session: {
       jwt: true,
@@ -26,14 +26,14 @@ export default (req, res) =>
     },
     callbacks: {
       async session(session, user) {
-        session.user.id = user.id
-        return session
+        session.user.id = user.id;
+        return session;
       },
       async jwt(tokenPayload, user, account, profile, isNewUser) {
-        const { db } = await connectToDB()
+        const { db } = await connectToDB();
 
         if (isNewUser) {
-          const personalFolder = await folder.createFolder(db, { createdBy: `${user.id}`, name: 'Getting Started' })
+          const personalFolder = await folder.createFolder(db, { createdBy: `${user.id}`, name: 'Getting Started' });
           await doc.createDoc(db, {
             name: 'Start Here',
             folder: personalFolder._id,
@@ -51,14 +51,14 @@ export default (req, res) =>
               ],
               version: '2.12.4',
             },
-          })
+          });
         }
 
         if (tokenPayload && user) {
-          return { ...tokenPayload, id: `${user.id}` }
+          return { ...tokenPayload, id: `${user.id}` };
         }
 
-        return tokenPayload
+        return tokenPayload;
       },
     },
-  })
+  });

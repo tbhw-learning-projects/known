@@ -1,27 +1,29 @@
-import React, { FC } from 'react'
-import { Pane, Heading, Paragraph, majorScale } from 'evergreen-ui'
-import Image from 'next/image'
-import Container from './container'
+import React from 'react';
+import { Pane, Heading, Paragraph, majorScale } from 'evergreen-ui';
+import Image from 'next/image';
+import Container from './container';
 
-const FeatureSection: FC<{ invert?: boolean; title: string; body: string; image: string }> = ({
-  title,
-  body,
-  image,
-  invert,
-}) => {
+interface FeatureSectionProps {
+  invert?: boolean;
+  title: string;
+  body: string;
+  image: string;
+}
+
+const FeatureSection = ({ title, body, image, invert }: FeatureSectionProps): JSX.Element => {
   const Left = () => (
     <Pane>
       <Heading size={900}>{title}</Heading>
       <Paragraph size={500}>{body}</Paragraph>
     </Pane>
-  )
+  );
   const Right = () => (
     <Pane textAlign={invert ? 'left' : 'right'} border elevation={1}>
       <Image src={image} width={1200} height={600} layout="responsive" quality={100} loading="lazy" />
     </Pane>
-  )
+  );
 
-  const children = invert ? [Right, Left] : [Left, Right]
+  const children = invert ? [Right, Left] : [Left, Right];
   return (
     <Pane
       minHeight="70vh"
@@ -43,7 +45,7 @@ const FeatureSection: FC<{ invert?: boolean; title: string; body: string; image:
         </Pane>
       </Container>
     </Pane>
-  )
-}
+  );
+};
 
-export default FeatureSection
+export default FeatureSection;
