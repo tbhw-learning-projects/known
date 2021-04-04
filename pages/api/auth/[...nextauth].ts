@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth, { Session, User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Providers from 'next-auth/providers';
+// eslint-disable-next-line import/no-unresolved
 import { WithAdditionalParams } from 'next-auth/_utils';
 import { connectToDB, folder, doc } from '../../../db';
 import { UserSession } from '../../../types';
